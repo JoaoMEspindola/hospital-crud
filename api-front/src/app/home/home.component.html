@@ -1,0 +1,88 @@
+<div class="d-flex flex-row bd-highlight mb-3 justify-content-center align-items-center">
+    <div class="p-2 bd-highlight">
+        <form>
+            <img src="assets/ficha.png" alt="">
+            <input type="text" placeholder="Nome" class="form-control" name="nome" [(ngModel)]="fichaPaciente.nome">
+            <input type="number" placeholder="Nº da Carteira" class="form-control" name="nmCarteiraPlano"
+                [(ngModel)]="fichaPaciente.nmCarteiraPlano">
+
+            <div class="dropdown-espec">
+                <select name="Especialidade" [(ngModel)]="fichaPaciente.especialidade" class="form-control" required>
+                    <option value="" disabled>Selecione a especialidade</option>
+                    <option [ngValue]="esp" *ngFor="let esp of listaEspecialidades; let last = last"
+                        [hidden]="last && !apareceEspec">
+                        {{esp.nome}}
+                    </option>
+                </select>
+            </div>
+
+            <div class="dropdown-plano">
+                <select name="Plano" [(ngModel)]="fichaPaciente.planoDeSaude" class="form-control" required>
+                    <option value="" disabled>Selecione o Plano</option>
+                    <option [ngValue]="p" *ngFor="let p of listaPlanos; let last = last"
+                        [hidden]="last && !apareceEspec">
+                        {{p.nome}}
+                    </option>
+                </select>
+            </div>
+
+            <input type="button" value="Cadastrar" *ngIf="btnCadastro" class="btn btn-primary" (click)="cadastrar()">
+            <input type="button" value="Alterar" *ngIf="!btnCadastro" class="btn btn-warning" (click)="editar()">
+            <input type="button" value="Remover" *ngIf="!btnCadastro" class="btn btn-danger" (click)="remover()">
+            <input type="button" value="Cancelar" *ngIf="!btnCadastro" class="btn btn-secondary" (click)="cancelar()">
+        </form>
+    </div>
+
+    <div class="p-2 bd-highlight custom-table">
+        <table class="table" *ngIf="tabela" id="tabelaBusca">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Especialidade</th>
+                    <th>Plano de Saúde</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let espec of listaEspecialidades; index as i">
+                    <td>{{i+1}}</td>
+                    <td>
+                        <span>{{espec.nome}}  </span>
+                        <span style="cursor: pointer; color: blue;" (click)="buscaPorEspecialidade(espec.id)">ℹ</span>
+                    </td>
+                    <td>
+                        <span>{{listaPlanos[i].nome}}  </span>
+                        <span style="cursor: pointer; color: blue;"
+                            (click)="buscaPorEspecialidade(listaPlanos[i].id)">ℹ</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <input id="botaoRefresh" type="button" value="Refresh" *ngIf="btnCadastro" class="btn btn-info"
+            (click)="selecionar()">
+    </div>
+</div>
+
+<table class="table" *ngIf="tabela">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Paciente</th>
+            <th>Nº da Carteira</th>
+            <th>Especialidade</th>
+            <th>Plano de Saúde</th>
+            <th>Selecionar</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr *ngFor="let f of fichas; index as i">
+            <td>{{i+1}}</td>
+            <td>{{f.nome}}</td>
+            <td>{{f.nmCarteiraPlano}}</td>
+            <td (click)="buscaPorEspecialidade(f.especialidade.id)">{{f.especialidade.nome}}</td>
+            <td (click)="buscaPorEspecialidade(f.planoDeSaude.id)">{{f.planoDeSaude.nome}}</td>
+            <td><button class="btn btn-success" (click)="selecionarFicha(i)">Selecionar</button></td>
+        </tr>
+    </tbody>
+</table>
